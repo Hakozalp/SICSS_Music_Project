@@ -1,0 +1,262 @@
+library(tidyverse)
+library(fs)
+library(lubridate)
+library(spotifyr)
+
+file_paths<-fs::dir_ls("~/Documents/SICSS Project/Turkey_Top_200")
+
+file_paths
+
+file_contents<-list()
+
+for (i in seq_along(file_paths)) {
+  file_contents[[i]]<- read.csv(file=file_paths[[i]],header = F, col.names=c("Position","Track Name", "Artist", "Streams", "URL"), encoding = 'UTF-8', skip=2)
+}
+
+for (i in 1:84) {
+file_contents[[i]]$start_date <- substr(file_paths[i],75, 84)
+file_contents[[i]]$start_date <- ymd(file_contents[[i]]$start_date)
+file_contents[[i]]$end_date <- substr(file_paths[i],87, 96)
+file_contents[[i]]$end_date <- ymd(file_contents[[i]]$end_date)
+}
+
+spotify_turkey<-as.data.frame(NULL)
+
+for (i in 1:84) {
+  spotify_turkey  <-rbind(spotify_turkey,file_contents[[i]])
+}
+
+file_paths2<-fs::dir_ls("~/Documents/SICSS Project/UK_Top_200")
+
+file_paths2
+
+file_contents2<-list()
+
+for (i in seq_along(file_paths2)) {
+  file_contents2[[i]]<- read.csv(file=file_paths2[[i]],header = F, col.names=c("Position","Track Name", "Artist", "Streams", "URL"), encoding = 'UTF-8', skip=2)
+}
+
+for (i in 1:84) {
+  file_contents2[[i]]$start_date <- substr(file_paths2[i],71, 80)
+  file_contents2[[i]]$start_date <- ymd(file_contents2[[i]]$start_date)
+  file_contents2[[i]]$end_date <- substr(file_paths2[i],83, 92)
+  file_contents2[[i]]$end_date <- ymd(file_contents2[[i]]$end_date)
+}
+
+spotify_uk<-as.data.frame(NULL)
+
+for (i in 1:84) {
+  spotify_uk  <-rbind(spotify_uk,file_contents2[[i]])
+}
+
+spotify_turkey_unique<-unique(spotify_turkey$URL)
+spotify_turkey_unique_track_ids<-substr(spotify_turkey_unique, 32,60)
+
+spotify_uk_unique<-unique(spotify_uk$URL)
+spotify_uk_unique_track_ids<-substr(spotify_uk_unique, 32,60)
+
+## Manually divide data into 50 observations each for Spotify API
+
+spotify_turkey_ids_1<-spotify_turkey_unique_track_ids[1:50]
+spotify_turkey_ids_2<-spotify_turkey_unique_track_ids[51:100]
+spotify_turkey_ids_3<-spotify_turkey_unique_track_ids[101:150]
+spotify_turkey_ids_4<-spotify_turkey_unique_track_ids[151:200]
+spotify_turkey_ids_5<-spotify_turkey_unique_track_ids[201:250]
+spotify_turkey_ids_6<-spotify_turkey_unique_track_ids[251:300]
+spotify_turkey_ids_7<-spotify_turkey_unique_track_ids[301:350]
+spotify_turkey_ids_8<-spotify_turkey_unique_track_ids[351:400]
+spotify_turkey_ids_9<-spotify_turkey_unique_track_ids[401:450]
+spotify_turkey_ids_10<-spotify_turkey_unique_track_ids[451:500]
+spotify_turkey_ids_11<-spotify_turkey_unique_track_ids[501:550]
+spotify_turkey_ids_12<-spotify_turkey_unique_track_ids[551:600]
+spotify_turkey_ids_13<-spotify_turkey_unique_track_ids[601:650]
+spotify_turkey_ids_14<-spotify_turkey_unique_track_ids[651:700]
+spotify_turkey_ids_15<-spotify_turkey_unique_track_ids[701:750]
+spotify_turkey_ids_16<-spotify_turkey_unique_track_ids[751:800]
+spotify_turkey_ids_17<-spotify_turkey_unique_track_ids[801:850]
+spotify_turkey_ids_18<-spotify_turkey_unique_track_ids[851:900]
+spotify_turkey_ids_19<-spotify_turkey_unique_track_ids[901:950]
+spotify_turkey_ids_20<-spotify_turkey_unique_track_ids[951:1000]
+spotify_turkey_ids_21<-spotify_turkey_unique_track_ids[1001:1050]
+spotify_turkey_ids_22<-spotify_turkey_unique_track_ids[1051:1100]
+spotify_turkey_ids_23<-spotify_turkey_unique_track_ids[1101:1150]
+spotify_turkey_ids_24<-spotify_turkey_unique_track_ids[1151:1200]
+spotify_turkey_ids_25<-spotify_turkey_unique_track_ids[1201:1250]
+spotify_turkey_ids_26<-spotify_turkey_unique_track_ids[1251:1278]
+
+spotify_uk_ids_1<-spotify_uk_unique_track_ids[1:50]
+spotify_uk_ids_2<-spotify_uk_unique_track_ids[51:100]
+spotify_uk_ids_3<-spotify_uk_unique_track_ids[101:150]
+spotify_uk_ids_4<-spotify_uk_unique_track_ids[151:200]
+spotify_uk_ids_5<-spotify_uk_unique_track_ids[201:250]
+spotify_uk_ids_6<-spotify_uk_unique_track_ids[251:300]
+spotify_uk_ids_7<-spotify_uk_unique_track_ids[301:350]
+spotify_uk_ids_8<-spotify_uk_unique_track_ids[351:400]
+spotify_uk_ids_9<-spotify_uk_unique_track_ids[401:450]
+spotify_uk_ids_10<-spotify_uk_unique_track_ids[451:500]
+spotify_uk_ids_11<-spotify_uk_unique_track_ids[501:550]
+spotify_uk_ids_12<-spotify_uk_unique_track_ids[551:600]
+spotify_uk_ids_13<-spotify_uk_unique_track_ids[601:650]
+spotify_uk_ids_14<-spotify_uk_unique_track_ids[651:700]
+spotify_uk_ids_15<-spotify_uk_unique_track_ids[701:750]
+spotify_uk_ids_16<-spotify_uk_unique_track_ids[751:800]
+spotify_uk_ids_17<-spotify_uk_unique_track_ids[801:850]
+spotify_uk_ids_18<-spotify_uk_unique_track_ids[851:900]
+spotify_uk_ids_19<-spotify_uk_unique_track_ids[901:950]
+spotify_uk_ids_20<-spotify_uk_unique_track_ids[951:1000]
+spotify_uk_ids_21<-spotify_uk_unique_track_ids[1001:1050]
+spotify_uk_ids_22<-spotify_uk_unique_track_ids[1051:1100]
+spotify_uk_ids_23<-spotify_uk_unique_track_ids[1101:1150]
+spotify_uk_ids_24<-spotify_uk_unique_track_ids[1151:1200]
+spotify_uk_ids_25<-spotify_uk_unique_track_ids[1201:1250]
+spotify_uk_ids_26<-spotify_uk_unique_track_ids[1251:1300]
+spotify_uk_ids_27<-spotify_uk_unique_track_ids[1301:1350]
+spotify_uk_ids_28<-spotify_uk_unique_track_ids[1351:1400]
+spotify_uk_ids_29<-spotify_uk_unique_track_ids[1401:1450]
+spotify_uk_ids_30<-spotify_uk_unique_track_ids[1451:1500]
+spotify_uk_ids_31<-spotify_uk_unique_track_ids[1501:1550]
+spotify_uk_ids_32<-spotify_uk_unique_track_ids[1551:1600]
+spotify_uk_ids_33<-spotify_uk_unique_track_ids[1601:1650]
+spotify_uk_ids_34<-spotify_uk_unique_track_ids[1651:1700]
+spotify_uk_ids_35<-spotify_uk_unique_track_ids[1701:1750]
+spotify_uk_ids_36<-spotify_uk_unique_track_ids[1751:1800]
+spotify_uk_ids_37<-spotify_uk_unique_track_ids[1801:1850]
+spotify_uk_ids_38<-spotify_uk_unique_track_ids[1851:1870]
+
+id <- "Your Spotify Token ID"
+secret <- "Your Spotify Token Secret"
+Sys.setenv(SPOTIFY_CLIENT_ID = id)
+Sys.setenv(SPOTIFY_CLIENT_SECRET = secret)
+access_token <- get_spotify_access_token()
+
+track_features_TR_1<-get_track_audio_features(spotify_turkey_ids_1)
+track_features_TR_2<-get_track_audio_features(spotify_turkey_ids_2)
+track_features_TR_3<-get_track_audio_features(spotify_turkey_ids_3)
+track_features_TR_4<-get_track_audio_features(spotify_turkey_ids_4)
+track_features_TR_5<-get_track_audio_features(spotify_turkey_ids_5)
+track_features_TR_6<-get_track_audio_features(spotify_turkey_ids_6)
+track_features_TR_7<-get_track_audio_features(spotify_turkey_ids_7)
+track_features_TR_8<-get_track_audio_features(spotify_turkey_ids_8)
+track_features_TR_9<-get_track_audio_features(spotify_turkey_ids_9)
+track_features_TR_10<-get_track_audio_features(spotify_turkey_ids_10)
+track_features_TR_11<-get_track_audio_features(spotify_turkey_ids_11)
+track_features_TR_12<-get_track_audio_features(spotify_turkey_ids_12)
+track_features_TR_13<-get_track_audio_features(spotify_turkey_ids_13)
+track_features_TR_14<-get_track_audio_features(spotify_turkey_ids_14)
+track_features_TR_15<-get_track_audio_features(spotify_turkey_ids_15)
+track_features_TR_16<-get_track_audio_features(spotify_turkey_ids_16)
+track_features_TR_17<-get_track_audio_features(spotify_turkey_ids_17)
+track_features_TR_18<-get_track_audio_features(spotify_turkey_ids_18)
+track_features_TR_19<-get_track_audio_features(spotify_turkey_ids_19)
+track_features_TR_20<-get_track_audio_features(spotify_turkey_ids_20)
+track_features_TR_21<-get_track_audio_features(spotify_turkey_ids_21)
+track_features_TR_22<-get_track_audio_features(spotify_turkey_ids_22)
+track_features_TR_23<-get_track_audio_features(spotify_turkey_ids_23)
+track_features_TR_24<-get_track_audio_features(spotify_turkey_ids_24)
+track_features_TR_25<-get_track_audio_features(spotify_turkey_ids_25)
+track_features_TR_26<-get_track_audio_features(spotify_turkey_ids_26)
+
+track_info_TR_1<-get_tracks(spotify_turkey_ids_1)
+track_info_TR_2<-get_tracks(spotify_turkey_ids_2)
+track_info_TR_3<-get_tracks(spotify_turkey_ids_3)
+track_info_TR_4<-get_tracks(spotify_turkey_ids_4)
+track_info_TR_5<-get_tracks(spotify_turkey_ids_5)
+track_info_TR_6<-get_tracks(spotify_turkey_ids_6)
+track_info_TR_7<-get_tracks(spotify_turkey_ids_7)
+track_info_TR_8<-get_tracks(spotify_turkey_ids_8)
+track_info_TR_9<-get_tracks(spotify_turkey_ids_9)
+track_info_TR_10<-get_tracks(spotify_turkey_ids_10)
+track_info_TR_11<-get_tracks(spotify_turkey_ids_11)
+track_info_TR_12<-get_tracks(spotify_turkey_ids_12)
+track_info_TR_13<-get_tracks(spotify_turkey_ids_13)
+track_info_TR_14<-get_tracks(spotify_turkey_ids_14)
+track_info_TR_15<-get_tracks(spotify_turkey_ids_15)
+track_info_TR_16<-get_tracks(spotify_turkey_ids_16)
+track_info_TR_17<-get_tracks(spotify_turkey_ids_17)
+track_info_TR_18<-get_tracks(spotify_turkey_ids_18)
+track_info_TR_19<-get_tracks(spotify_turkey_ids_19)
+track_info_TR_20<-get_tracks(spotify_turkey_ids_20)
+track_info_TR_21<-get_tracks(spotify_turkey_ids_21)
+track_info_TR_22<-get_tracks(spotify_turkey_ids_22)
+track_info_TR_23<-get_tracks(spotify_turkey_ids_23)
+track_info_TR_24<-get_tracks(spotify_turkey_ids_24)
+track_info_TR_25<-get_tracks(spotify_turkey_ids_25)
+track_info_TR_26<-get_tracks(spotify_turkey_ids_26)
+
+track_features_UK_1<-get_track_audio_features(spotify_uk_ids_1)
+track_features_UK_2<-get_track_audio_features(spotify_uk_ids_2)
+track_features_UK_3<-get_track_audio_features(spotify_uk_ids_3)
+track_features_UK_4<-get_track_audio_features(spotify_uk_ids_4)
+track_features_UK_5<-get_track_audio_features(spotify_uk_ids_5)
+track_features_UK_6<-get_track_audio_features(spotify_uk_ids_6)
+track_features_UK_7<-get_track_audio_features(spotify_uk_ids_7)
+track_features_UK_8<-get_track_audio_features(spotify_uk_ids_8)
+track_features_UK_9<-get_track_audio_features(spotify_uk_ids_9)
+track_features_UK_10<-get_track_audio_features(spotify_uk_ids_10)
+track_features_UK_11<-get_track_audio_features(spotify_uk_ids_11)
+track_features_UK_12<-get_track_audio_features(spotify_uk_ids_12)
+track_features_UK_13<-get_track_audio_features(spotify_uk_ids_13)
+track_features_UK_14<-get_track_audio_features(spotify_uk_ids_14)
+track_features_UK_15<-get_track_audio_features(spotify_uk_ids_15)
+track_features_UK_16<-get_track_audio_features(spotify_uk_ids_16)
+track_features_UK_17<-get_track_audio_features(spotify_uk_ids_17)
+track_features_UK_18<-get_track_audio_features(spotify_uk_ids_18)
+track_features_UK_19<-get_track_audio_features(spotify_uk_ids_19)
+track_features_UK_20<-get_track_audio_features(spotify_uk_ids_20)
+track_features_UK_21<-get_track_audio_features(spotify_uk_ids_21)
+track_features_UK_22<-get_track_audio_features(spotify_uk_ids_22)
+track_features_UK_23<-get_track_audio_features(spotify_uk_ids_23)
+track_features_UK_24<-get_track_audio_features(spotify_uk_ids_24)
+track_features_UK_25<-get_track_audio_features(spotify_uk_ids_25)
+track_features_UK_26<-get_track_audio_features(spotify_uk_ids_26)
+track_features_UK_27<-get_track_audio_features(spotify_uk_ids_27)
+track_features_UK_28<-get_track_audio_features(spotify_uk_ids_28)
+track_features_UK_29<-get_track_audio_features(spotify_uk_ids_29)
+track_features_UK_30<-get_track_audio_features(spotify_uk_ids_30)
+track_features_UK_31<-get_track_audio_features(spotify_uk_ids_31)
+track_features_UK_32<-get_track_audio_features(spotify_uk_ids_32)
+track_features_UK_33<-get_track_audio_features(spotify_uk_ids_33)
+track_features_UK_34<-get_track_audio_features(spotify_uk_ids_34)
+track_features_UK_35<-get_track_audio_features(spotify_uk_ids_35)
+track_features_UK_36<-get_track_audio_features(spotify_uk_ids_36)
+track_features_UK_37<-get_track_audio_features(spotify_uk_ids_37)
+track_features_UK_38<-get_track_audio_features(spotify_uk_ids_38)
+
+track_info_UK_1<-get_tracks(spotify_uk_ids_1)
+track_info_UK_2<-get_tracks(spotify_uk_ids_2)
+track_info_UK_3<-get_tracks(spotify_uk_ids_3)
+track_info_UK_4<-get_tracks(spotify_uk_ids_4)
+track_info_UK_5<-get_tracks(spotify_uk_ids_5)
+track_info_UK_6<-get_tracks(spotify_uk_ids_6)
+track_info_UK_7<-get_tracks(spotify_uk_ids_7)
+track_info_UK_8<-get_tracks(spotify_uk_ids_8)
+track_info_UK_9<-get_tracks(spotify_uk_ids_9)
+track_info_UK_10<-get_tracks(spotify_uk_ids_10)
+track_info_UK_11<-get_tracks(spotify_uk_ids_11)
+track_info_UK_12<-get_tracks(spotify_uk_ids_12)
+track_info_UK_13<-get_tracks(spotify_uk_ids_13)
+track_info_UK_14<-get_tracks(spotify_uk_ids_14)
+track_info_UK_15<-get_tracks(spotify_uk_ids_15)
+track_info_UK_16<-get_tracks(spotify_uk_ids_16)
+track_info_UK_17<-get_tracks(spotify_uk_ids_17)
+track_info_UK_18<-get_tracks(spotify_uk_ids_18)
+track_info_UK_19<-get_tracks(spotify_uk_ids_19)
+track_info_UK_20<-get_tracks(spotify_uk_ids_20)
+track_info_UK_21<-get_tracks(spotify_uk_ids_21)
+track_info_UK_22<-get_tracks(spotify_uk_ids_22)
+track_info_UK_23<-get_tracks(spotify_uk_ids_23)
+track_info_UK_24<-get_tracks(spotify_uk_ids_24)
+track_info_UK_25<-get_tracks(spotify_uk_ids_25)
+track_info_UK_26<-get_tracks(spotify_uk_ids_26)
+track_info_UK_27<-get_tracks(spotify_uk_ids_27)
+track_info_UK_28<-get_tracks(spotify_uk_ids_28)
+track_info_UK_29<-get_tracks(spotify_uk_ids_29)
+track_info_UK_30<-get_tracks(spotify_uk_ids_30)
+track_info_UK_31<-get_tracks(spotify_uk_ids_31)
+track_info_UK_32<-get_tracks(spotify_uk_ids_32)
+track_info_UK_33<-get_tracks(spotify_uk_ids_33)
+track_info_UK_34<-get_tracks(spotify_uk_ids_34)
+track_info_UK_35<-get_tracks(spotify_uk_ids_35)
+track_info_UK_36<-get_tracks(spotify_uk_ids_36)
+track_info_UK_37<-get_tracks(spotify_uk_ids_37)
+track_info_UK_38<-get_tracks(spotify_uk_ids_38)
