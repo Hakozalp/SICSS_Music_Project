@@ -120,8 +120,8 @@ spotify_uk_ids_35<-spotify_uk_unique_track_ids[1701:1750]
 spotify_uk_ids_36<-spotify_uk_unique_track_ids[1751:1800]
 spotify_uk_ids_37<-spotify_uk_unique_track_ids[1801:1830]
 
-id <- "Token ID"
-secret <- "Token Secret"
+id <- "tokenid"
+secret <- "tokensecret"
 Sys.setenv(SPOTIFY_CLIENT_ID = id)
 Sys.setenv(SPOTIFY_CLIENT_SECRET = secret)
 access_token <- get_spotify_access_token()
@@ -396,3 +396,14 @@ spotify_uk_track_info_full_sample<-rbind(spotify_uk_track_info_full_sample,track
 
 spotify_turkey_full <-cbind(spotify_turkey_track_features_full_sample,spotify_turkey_track_info_full_sample)
 spotify_uk_full <-cbind(spotify_uk_track_features_full_sample,spotify_uk_track_info_full_sample)
+
+spotify_turkey$id<-substr(spotify_turkey$URL,32,60)
+spotify_uk$id<-substr(spotify_uk$URL,32,60)
+
+spotify_turkey_full_cleaned<-subset(spotify_turkey_full,select=-c(duration_ms,id,type,uri))
+
+merged_turkey_data<-merge(spotify_turkey,spotify_turkey_full_cleaned,by="id")
+
+spotify_uk_full_cleaned<-subset(spotify_uk_full,select=-c(duration_ms,id,type,uri))
+
+merged_uk_data<-merge(spotify_uk,spotify_uk_full_cleaned,by="id")
