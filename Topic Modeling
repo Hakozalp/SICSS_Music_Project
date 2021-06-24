@@ -1374,13 +1374,16 @@ tidy_turkish_lyrics <- turkish_lyrics_corpus %>%
   filter(word!="artık") %>%
   filter(word!="yeniden") %>%
   filter(word!="seni") %>%
-  filter(word!="mı") %>%
   filter(word!="benim") %>%
   filter(word!="weyo") %>%
   filter(word!="bile") %>%
   filter(word!="ha") %>%
-  filter(word!="fazla")
-  
+  filter(word!="fazla") %>%
+  filter(word!="andale") %>%
+  filter(word!="skrrrt") %>%
+  filter(word!="skrrt") %>%
+  filter(word!="çu")
+
 tidy_turkish_lyrics %>%
   count(word, sort = TRUE)
 
@@ -1395,14 +1398,14 @@ turkish_lyrics_sparse <- tidy_turkish_lyrics %>%
   count(track_title, word, sort = TRUE) %>%
   cast_sparse(track_title, word, n)
 
-topic_model_turkish_lyrics <- stm(turkish_lyrics_dfm, K = 12, 
+topic_model_turkish_lyrics <- stm(turkish_lyrics_dfm, K = 10, 
                    verbose = FALSE, init.type = "Spectral")
 
 td_beta_turkish_lyrics <- tidy(topic_model_turkish_lyrics)
 
 td_beta_turkish_lyrics %>%
   group_by(topic) %>%
-  top_n(5, beta) %>%
+  top_n(10, beta) %>%
   ungroup() %>%
   mutate(topic = paste0("Topic ", topic),
          term = reorder_within(term, beta, topic)) %>%
@@ -3270,7 +3273,9 @@ tidy_uk_lyrics <- uk_lyrics_corpus %>%
   filter(word!="na") %>%
   filter(word!="doo") %>%
   filter(word!="woo") %>%
-  filter(word!="mi")
+  filter(word!="mi") %>%
+  filter(word!="   ") %>%
+  filter(word!="□□□")
 
 tidy_uk_lyrics %>%
   count(word, sort = TRUE)
@@ -3283,14 +3288,14 @@ uk_lyrics_sparse <- tidy_uk_lyrics %>%
   count(track_title, word, sort = TRUE) %>%
   cast_sparse(track_title, word, n)
 
-topic_model_uk_lyrics <- stm(uk_lyrics_dfm, K = 15, 
+topic_model_uk_lyrics <- stm(uk_lyrics_dfm, K = 8, 
                                   verbose = FALSE, init.type = "Spectral")
 
 td_beta_uk_lyrics <- tidy(topic_model_uk_lyrics)
 
 td_beta_uk_lyrics %>%
   group_by(topic) %>%
-  top_n(5, beta) %>%
+  top_n(10, beta) %>%
   ungroup() %>%
   mutate(topic = paste0("Topic ", topic),
          term = reorder_within(term, beta, topic)) %>%
@@ -3303,3 +3308,30 @@ td_beta_uk_lyrics %>%
        title = "Highest word probabilities for each topic",
        subtitle = "Different words are associated with different topics")
 
+td_gamma_turkish_lyrics <- tidy(topic_model_turkish_lyrics, matrix = "gamma",                    
+                 document_names = rownames(turkish_lyrics_dfm))
+
+td_gamma_turkish_lyrics<-data.table::as.data.table(td_gamma_turkish_lyrics)
+
+td_gamma_turkish_lyrics_final<- td_gamma_turkish_lyrics %>%
+  group_by(document)%>%
+  arrange(-gamma)
+
+td_gamma_turkish_lyrics_final<- td_gamma_turkish_lyrics_final%>%
+  distinct(document, .keep_all=TRUE)
+
+Final_merged_turkey_data<-merge(merged_turkey_data,td_gamma_turkish_lyrics_final,by.x="Track.Name",by.y ="document")
+
+td_gamma_uk_lyrics <- tidy(topic_model_uk_lyrics, matrix = "gamma",                    
+                                document_names = rownames(uk_lyrics_dfm))
+
+td_gamma_uk_lyrics<-data.table::as.data.table(td_gamma_uk_lyrics)
+
+td_gamma_uk_lyrics_final<- td_gamma_uk_lyrics %>%
+  group_by(document)%>%
+  arrange(-gamma)
+
+td_gamma_uk_lyrics_final<- td_gamma_uk_lyrics_final%>%
+  distinct(document, .keep_all=TRUE)
+
+Final_merged_uk_data<-merge(merged_uk_data,td_gamma_uk_lyrics_final,by.x="Track.Name",by.y ="document")
