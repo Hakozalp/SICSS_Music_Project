@@ -3262,8 +3262,16 @@ tidy_uk_lyrics <- uk_lyrics_corpus %>%
   filter(word!="uh") %>%
   filter(word!="ah") %>%
   filter(word!="mmm") %>%
-  filter(word!="mmmh")
-  
+  filter(word!="mmmh") %>%
+  filter(word!="opp") %>%
+  filter(word!="ayy") %>%
+  filter(word!="eh") %>%
+  filter(word!="ddu") %>%
+  filter(word!="na") %>%
+  filter(word!="doo") %>%
+  filter(word!="woo") %>%
+  filter(word!="mi")
+
 tidy_uk_lyrics %>%
   count(word, sort = TRUE)
 
@@ -3275,7 +3283,7 @@ uk_lyrics_sparse <- tidy_uk_lyrics %>%
   count(track_title, word, sort = TRUE) %>%
   cast_sparse(track_title, word, n)
 
-topic_model_uk_lyrics <- stm(uk_lyrics_dfm, K = 12, 
+topic_model_uk_lyrics <- stm(uk_lyrics_dfm, K = 15, 
                                   verbose = FALSE, init.type = "Spectral")
 
 td_beta_uk_lyrics <- tidy(topic_model_uk_lyrics)
